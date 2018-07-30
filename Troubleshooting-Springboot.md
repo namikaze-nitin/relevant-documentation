@@ -1,5 +1,4 @@
 # Troubleshooting
-
 ## Create a configuration in SpringBoot
 * Lets us try to autowire a SessionFactory object. For this, we need to configure a SessionFactory bean. Go-To application.properties and add ```spring.jpa.properties.hibernate.current_session_context_class=
 org.springframework.orm.hibernate4.SpringSessionContext```.
@@ -21,40 +20,38 @@ org.springframework.orm.hibernate4.SpringSessionContext```.
 	    fact.setEntityManagerFactory(emf);
 	    return fact;
 	}
-
 ```
-In application.properties : ```spring.jpa.properties.hibernate.current_session_context_class=
+In application.properties of a springboot application : ```spring.jpa.properties.hibernate.current_session_context_class=
 org.springframework.orm.hibernate5.SpringSessionContext```
+[Link for reference](https://stackoverflow.com/questions/25063995/spring-boot-handle-to-hibernate-sessionfactory)
 
-[Link for reference](https://stackoverflow.com/questions/25063995/spring-boot-handle-to-hibernate-sessionfactory) 
-
-goto your class where you want SessionFactory and add :
+Goto your class where you want SessionFactory and add :
 ```
 	@Autowired
 	private SessionFactory sessionFactory;
 ```
 
 ## Autowiring constructor vs field
-* We have (A)Field Injection : 
-```
-	@Component
-	public class SomeService {
-     @Autowired private SomeOtherService someOtherService;
-}
-```
-and (B)Constructor Injection:
-```
-	@Component
-	public class SomeService {
-	    private final SomeOtherService someOtherService;
-
-	    @Autowired
-	    public SomeService(SomeOtherService someOtherService){
-	        this.someOtherService = someOtherService;
-	    }
-	}
-```
-
+* We have (A) Field Injection : 
+    ```
+    	@Component
+    	public class SomeService {
+         @Autowired private SomeOtherService someOtherService;
+    }
+    ```
+    and (B) Constructor Injection:
+    ```
+    	@Component
+    	public class SomeService {
+    	    private final SomeOtherService someOtherService;
+    
+    	    @Autowired
+    	    public SomeService(SomeOtherService someOtherService){
+    	        this.someOtherService = someOtherService;
+    	    }
+    	}
+    ```
+    
 * In Option(A), you are allowing anyone (in different class outside/inside the Spring container) to create an instance using default constructor (like new SomeService()), which is NOT good as you need SomeOtherService object (as a dependency) for your SomeService.
 
 * Option(B) is preferred approach as it does NOT allow to create SomeService object without actually resolving the SomeOtherService dependency.
@@ -70,10 +67,11 @@ and (B)Constructor Injection:
 * This means that **@Transient** is stronger condition then **transient**.
 
 * NEED for this? suppose inside an entity class we have a field :
-```	@Transient
-	private List<OrderRatings> ratings;
-```
-Now suppose we want to persist that entity into the database. ByteStream of `ratings` will get created but column for this field will not be created in the database.
+    ```	
+        @Transient
+    	private List<OrderRatings> ratings;
+    ```
+    Now suppose we want to persist that entity into the database. ByteStream of `ratings` will get created but column for this field will not be created in the database.
 
 * THIS ```@Transient``` field can be used normally like any other field of a class. For eg : saving JSON DATA through a postman call will save List of the ratings into the object and we can use it as we want.
 
@@ -134,9 +132,8 @@ Here we are accessing `orderNo` field of `OrderRequest` class.
 
 [Reference Discussion...](https://stackoverflow.com/questions/12658136/springmvc-annotations-for-dao-interface-and-dao-implementation)
 
-## LoggerFactory is not a Logback LoggerContext but Logback is on the classpath
-* Springboot by default adds LogBack and it collides with one that you may specifically provide using slf4j.
-
+## Error : LoggerFactory is not a Logback LoggerContext but Logback is on the classpath
+**Solution** : Springboot by default adds LogBack and it collides with one that you may specifically provide using slf4j.
 ```
 	<dependency>
 	  <groupId>org.springframework.boot</groupId>
@@ -166,51 +163,99 @@ Here we are accessing `orderNo` field of `OrderRequest` class.
 [Reference doc](https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit.html)
 
 ## When to use different log levels
-Basic used :
+Basic use :
 
-* Debug - Information that is diagnostically helpful to people more than just developers (IT, sysadmins, etc.).
-* Info - Generally useful information to log (service start/stop, configuration assumptions, etc). Info I want to always have available but usually don't care about under normal circumstances. This is my out-of-the-box config level.
-* Warn - Anything that can potentially cause application oddities, but for which I am automatically recovering. (Such as switching from a primary to backup server, retrying an operation, missing secondary data, etc.)
-* Error - Any error which is fatal to the operation, but not the service or application (can't open a required file, missing data, etc.). These errors will force user (administrator, or direct user) intervention. These are usually reserved (in my apps) for incorrect connection strings, missing services, etc. 
+* **Debug** - Information that is diagnostically helpful to people more than just developers (IT, sysadmins, etc.).
+* **Info** - Generally useful information to log (service start/stop, configuration assumptions, etc). Info I want to always have available but usually don't care about under normal circumstances. This is my out-of-the-box config level.
+* **Warn** - Anything that can potentially cause application oddities, but for which I am automatically recovering. (Such as switching from a primary to backup server, retrying an operation, missing secondary data, etc.)
+* **Error** - Any error which is fatal to the operation, but not the service or application (can't open a required file, missing data, etc.). These errors will force user (administrator, or direct user) intervention. These are usually reserved (in my apps) for incorrect connection strings, missing services, etc. 
 
 [Reference related...](https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels)
 
 ## SpringBoot Junit Testing Controller
+* Create an API controller to be tested.
+* Add following dependency to test :
+```
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+```
+* Create a test class :
+```
+@RunWith(SpringRunner.class)
+@SpringBootTest
+    public class ApplicationTest {
+        @Test
+        public void contextLoads() throws Exception {
+        }
+    }
+```
+We can use `@WebMvc` or `@MockMvc` also instead of `@SpringBootTest`. 
+* Use MockMvc to test your apis. Example : 
+    ```
+    @RunWith(SpringRunner.class)
+    @WebMvcTest(GreetingController.class)
+    public class WebMockTest {
+    
+        @Autowired
+        private MockMvc mockMvc;
+    
+        @MockBean
+        private GreetingService service;
+    
+        @Test
+        public void greetingShouldReturnMessageFromService() throws Exception {
+            when(service.greet()).thenReturn("Hello Mock");
+            this.mockMvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
+                    .andExpect(content().string(containsString("Hello Mock")));
+        }
+    }
+    ```
+[Reference Spring docs...](https://spring.io/guides/gs/testing-web/)
+[Github link for an example module...](https://github.com/namikaze-nitin/springData-rating-daalchini/tree/master/src/test/java/co/nitin/springbootRest/controller)
 
-[Reference Spring docs](https://spring.io/guides/gs/testing-web/)
 ## Unable to set runtime Local Server Port in Spring Boot Test 
-
-use [WebEnvironment.DefinedPort](https://stackoverflow.com/questions/43491893/unable-to-set-runtime-local-server-port-in-spring-boot-test-1-5)
+Use [WebEnvironment.DefinedPort](https://stackoverflow.com/questions/43491893/unable-to-set-runtime-local-server-port-in-spring-boot-test-1-5) OR [Follow github Test example](https://github.com/namikaze-nitin/springData-rating-daalchini/blob/master/src/test/java/co/nitin/springbootRest/controller/OrderRequestRatingControllerTest.java)
 
 ## What Is a Spring Context?
-
 Spring contexts are also called Spring IoC containers, which are responsible for instantiating, configuring, and assembling beans by reading configuration metadata from XML, Java annotations, and/or Java code in the configuration files.
 
 ## Use of @WebMvc and @MockMvc and @SpringBootTest
-https://spring.io/guides/gs/testing-web/
-https://stackoverflow.com/questions/39865596/difference-between-using-mockmvc-with-springboottest-and-using-webmvctest/39869110
+* `@SpringBootTest` annotation tells Spring Boot to go and look for a main configuration class (one with @SpringBootApplication for instance), and use that to start a Spring application context. SpringBootTest loads complete application and injects all the beans which is can be slow.
+
+* `@WebMvcTest` is used for testing the controller layer and you need to provide remaining dependencies required using Mock Objects.
+
+* Some more annotations available for testing are :
+    ```
+    @WebMvcTest - for testing the controller layer
+    @JsonTest - for testing the JSON marshalling and unmarshalling
+    @DataJpaTest - for testing the repository layer
+    @RestClientTests - for testing REST clients
+    ```
+[Official spring docs...](https://spring.io/guides/gs/testing-web/)
+[Worth-a-read stackoverflow discussions... ](https://stackoverflow.com/questions/39865596/difference-between-using-mockmvc-with-springboottest-and-using-webmvctest/39869110)
 
 ## What testing to use
-
-https://blog.zenika.com/2013/01/15/spring-mvc-test-framework/
+Which kind of unit testing to use [reference doc...](https://blog.zenika.com/2013/01/15/spring-mvc-test-framework/)
 
 ## Testing JSON POST 
+[Github example module...](https://github.com/namikaze-nitin/springData-rating-daalchini/blob/master/src/test/java/co/nitin/springbootRest/controller/APIControllerTest.java)
+[DZone blog](https://dzone.com/articles/simple-spring-boot-post)
+[Example by Nixsmash](https://nixmash.com/post/testing-json-posting-with-spring-boot-jacksontester)
+[]()
 
-JacksonTester
-https://dzone.com/articles/simple-spring-boot-post
-https://nixmash.com/post/testing-json-posting-with-spring-boot-jacksontester
+## Error : SpringBoot test unable to inject MockMvc
+* Either use `@WebMvcTest`. OR 
+* Who is interested in loading the full application... should try using `@SpringBootTest` combined with `@AutoConfigureMockMvc` rather than the @WebMvcTest.
 
-## spring boot test unable to inject MockMvc
-* Either use @WebMvcTest.
-* Who is interested in loading the full application should try using `@SpringBootTest` combined with `@AutoConfigureMockMvc` rather than the @WebMvcTest.
-
-[Reference](https://stackoverflow.com/questions/38084872/issue-with-testing-spring-mvc-slice-in-springboot-1-4)
+[Reference stackoverflow discussion...](https://stackoverflow.com/questions/38084872/issue-with-testing-spring-mvc-slice-in-springboot-1-4)
 
 ## Github
+Using github : [reference link...](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/)
 
-https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/
-
-## Found multiple declarations of @BootstrapWith for test class
+## Error : Found multiple declarations of @BootstrapWith for test class
 ### Stack Trace:
 ```
 java.lang.IllegalStateException: Configuration error: found multiple declarations of @BootstrapWith for test class [co.nitin.springbootRest.controller.APIControllerTest]: [@org.springframework.test.context.BootstrapWith(value=class org.springframework.boot.test.context.SpringBootTestContextBootstrapper), @org.springframework.test.context.BootstrapWith(value=class org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper)]
@@ -239,20 +284,17 @@ java.lang.IllegalStateException: Configuration error: found multiple declaration
 	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:206)
 ```
 ### Solution
-* You have added mulltiple notation on test class that helps in configuration testing.
-
+* You have added mulltiple notation on test class that helps in configuration testing. Remove `@SpringBootTest` or `@WebMvcTest` from the class :
 ```
 	@RunWith(SpringRunner.class)
 	@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 	@WebMvcTest
-public class APIControllerTest
+    public class APIControllerTest
 ```
-Remove `@SpringBootTest` or `@WebMvcTest`.
 
 
 ## Unsatisfied dependency expressed through field 'mockMvc'
 ### StackTrace
-
 ```
 org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'co.nitin.springbootRest.controller.APIControllerTest': Unsatisfied dependency expressed through field 'mockMvc'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.test.web.servlet.MockMvc' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
 	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
@@ -295,7 +337,7 @@ Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No q
 ```
 
 ### Solution
-Class not annotated to find MockMvc and we have a field `of class MockMvc autowired in class`.
+Class not annotated to find MockMvc and we have a field of type `MockMvc autowired in class`.
 ```
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -304,7 +346,7 @@ public class APIControllerTest {
 		@Autowired private MockMvc mockMvc;
 }
 ```
-Add : 
+Add : `@SpringBootTest` with `AutoConfigureMockMvc` to test...
 ```
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
