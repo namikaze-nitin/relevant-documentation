@@ -293,7 +293,7 @@ java.lang.IllegalStateException: Configuration error: found multiple declaration
 ```
 
 
-## Unsatisfied dependency expressed through field 'mockMvc'
+## Error : Unsatisfied dependency expressed through field 'mockMvc'
 ### StackTrace
 ```
 org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'co.nitin.springbootRest.controller.APIControllerTest': Unsatisfied dependency expressed through field 'mockMvc'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.test.web.servlet.MockMvc' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
@@ -355,4 +355,51 @@ public class APIControllerTest {
 
 		@Autowired private MockMvc mockMvc;
 }
+```
+
+## EntityManagerFactory vs SessionFactory
+* `EntityManagerFactory` is the standard implementation, it is the same across all the implementations. If we migrate our ORM for any other provider, there will not be any change in the approach for handling the transaction. In contrast, if you use hibernate’s session factory, it is tied  to hibernate APIs and ca not migrate to new vendor easily.
+* One dis-advantage of using the standard implementation is that, it is not providing the advanced features. There is not much control provided in the EntityManager APIs. Whereas, hibernate’s SessionFactory has lot of advanced features which can not done in JPA. One such thing is retrieving the ID generator without closing the transaction, batch insert, etc.
+* We can use entity manger and session factory together. In this approach, entity manage delegates session handling to the hibernate by invoking the unwrap method. Like this:
+
+```Session session = entityManager.unwrap(Session.class);```
+
+Using EntityManagerFactory approach allows us to use callback method annotations like @PrePersist, @PostPersist,@PreUpdate with no extra configuration. Using similar callbacks while using SessionFactory will require extra efforts.
+
+* `Persistence Context` : To be very precise, a persistent context manages a set of entities which in turn is managed by the EntityManager. A persistent context keeps track of the state (or the changes) that an entity object may undergo. And the EntityManager takes the support of this persistence context to commit or to undo the changes. As soon as an EntityManager object is created, it is implicitly associated with a persistence context for managing a set of entities.
+
+## JPA vs Hibernate
+
+## Double quotes in print statement `::`
+* This is called method reference and is a syntactical replacement for lamda expressions. Example :
+```
+	List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+	numbers.forEach(System.out::println);
+```
+* In java-8 Streams Reducer in simple works is a function which takes two values as input and returns result after some calculation. This result is fed in next iteration. For eg : In case of Math:max function, method keeps returning max of two values passed and in the end you have largest number in hand.
+[reference discussion...](https://stackoverflow.com/questions/20001427/double-colon-operator-in-java-8)
+
+## Dates in java
+* `java.util.Date` provides date information in java.
+* `Date date = new Date()` will create a `Date` object with current Timestamp in it i.e., it will consist of "Date Time" object.
+* Example use :
+```
+    String query = "SELECT v.machineId, MAX(v.updatedTime) FROM MachineHealthDetails v GROUP BY v.machineId";
+    List<Object[]> resultSet = em.createQuery(query).getResultList();
+
+    for(Object[] obj : resultSet) {
+    	
+    	Long id = (Long) obj[0];
+    	Date date = (Date) obj[1];
+    	Date curDate = new Date ();
+    	
+    	int diffInMins = (int) ((curDate.getTime()-date.getTime())/1000/60);
+    	
+    	boolean working = diffInMins <= 2 ? true:false;	    	
+    	System.out.println(id + " working? : " + working);
+    	System.out.println("Machine with id:" + id 
+    			+ "not working since : " + diffInMins/3600
+    			+ "days " +  diffInMins/60
+    			+ "hrs " + diffInMins%60 + "mins");
+    }
 ```
