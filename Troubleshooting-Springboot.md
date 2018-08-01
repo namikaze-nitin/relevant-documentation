@@ -447,3 +447,5 @@ Using EntityManagerFactory approach allows us to use callback method annotations
 		}
 	``` 
 	* You can use different fields provided by `@Scheduled` annotation. For eg, to schedule job at exactly x=2 seconds use `@Scheduled(fixedRate = 2000)`.
+
+* For enabling configuration using xml file : [click here...](http://websystique.com/spring/spring-job-scheduling-using-xml-configuration/).
