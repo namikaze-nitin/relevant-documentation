@@ -449,3 +449,9 @@ Using EntityManagerFactory approach allows us to use callback method annotations
 	* You can use different fields provided by `@Scheduled` annotation. For eg, to schedule job at exactly x=2 seconds use `@Scheduled(fixedRate = 2000)`.
 
 * For enabling configuration using xml file : [click here...](http://websystique.com/spring/spring-job-scheduling-using-xml-configuration/).
+
+* You can modify these calls to support scheduling on different weekdays. For eg, you might not want your scheduling to work on weekends, for that you can modify your cron job as : `@Scheduled(cron="*/5 * * * * MON-FRI")`
+
+>In essence, if your goal is to implement a quick and basic form of job/task scheduling then Spring Scheduler will be ideal. On the other hand, if you need clustering as well as JobPersistence support then Quartz may serve better.
+
+[Ref-Link for Spring schuling vs Quartz scheduling...](https://stackoverflow.com/questions/38564101/difference-between-quartz-job-and-scheduling-tasks-with-spring)
