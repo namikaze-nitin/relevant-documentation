@@ -425,3 +425,25 @@ Using EntityManagerFactory approach allows us to use callback method annotations
 	```
 
 [ref-link](https://spring.io/guides/gs/scheduling-tasks/)
+
+* For Spring-Mvc :
+	* Create a configuration class to enable scheduling:
+	```
+		@Configuration
+		@EnableScheduling
+		public class SpringConfig {
+		   ...
+		}
+	```
+	* Create a component class with methods performing scheduling operations:
+	```
+		@Component
+		public class MyScheduler {
+			...
+		    @Scheduled(cron = "0 * * * * *")
+		    public void myJob() {
+				System.out.println("King in the north... ");
+		    }
+		}
+	``` 
+	* You can use different fields provided by `@Scheduled` annotation. For eg, to schedule job at exactly x=2 seconds use `@Scheduled(fixedRate = 2000)`.
