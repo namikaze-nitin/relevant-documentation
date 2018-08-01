@@ -403,3 +403,25 @@ Using EntityManagerFactory approach allows us to use callback method annotations
     			+ "hrs " + diffInMins%60 + "mins");
     }
 ```
+
+## Job Scheduling in java
+* For spring-boot example: 
+	* Annotate your initialzer class with `@EnableScheduling` to enable scheduling:
+	```
+		@SpringBootApplication
+		@EnableScheduling
+		public class HealthVendingMachineApplication {
+			...
+		}
+	```
+	* Create a method annotated with `@Scheduled` to perform a scheduling task:
+	```
+	@Scheduled(fixedRate = 2000)
+	//Or Use @Scheduled(cron='* * * *') Ref-link : https://spring.io/guides/gs/scheduling-tasks/
+	public void scheduleTaskWithFixedRate() {
+		...
+		System.out.println("King in the north... ");
+	}
+	```
+
+[ref-link](https://spring.io/guides/gs/scheduling-tasks/)
