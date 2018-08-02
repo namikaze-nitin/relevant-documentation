@@ -455,3 +455,91 @@ Using EntityManagerFactory approach allows us to use callback method annotations
 >In essence, if your goal is to implement a quick and basic form of job/task scheduling then Spring Scheduler will be ideal. On the other hand, if you need clustering as well as JobPersistence support then Quartz may serve better.
 
 [Ref-Link for Spring schuling vs Quartz scheduling...](https://stackoverflow.com/questions/38564101/difference-between-quartz-job-and-scheduling-tasks-with-spring)
+
+## Import SQL table in database
+
+## Try springboot API requests using @RequestParam
+https://stackoverflow.com/questions/28039709/what-is-difference-between-requestbody-and-requestparam
+
+## ERROR : Java compiler level does not match the version of the installed Java project facet.
+
+### Solution
+* This mainly happens due to difference in versions of the project build and one that eclipse is using.
+* Steps :
+	* Right Click on project 
+	* Select Properties
+	* Search for Project facets
+	* Goto java sub-tab
+	* Set java version to one which your eclipse is using inside `pom.xml` (if using maven)
+
+> This problem mainly arises when there is conflict in parent-project version of java and the one that eclipse/your project is using. just set pom dependency to the one that parent is using :
+```
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+    </plugin>
+```
+
+## cURL Request in Java
+* cURL stands for clients for URL.
+* For sending and recieving data/file using URL requests.
+* In java it can be done in many ways. Mentioning using `HttpURLConnection` here :
+	* Create a `URL` :
+	```
+		URL url = new URL("https://jsonplaceholder.typicode.com/posts");
+	```
+	* Create a `HttpUrlConnection` annd add headers to it:
+	```
+		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestProperty("content-type", "application/json");
+		conn.setUseCaches(false);
+		conn.setRequestMethod("POST");
+	```
+	* `OutputStreamReader` to request it post the url:
+	```
+		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+		out.write(data);
+		out.close();
+	```
+	* `BufferedReader` and `InputStreamReader` to fetch the response:
+	```
+		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));		
+		StringBuilder builder = new StringBuilder();
+		while(true) {
+			String line = reader.readLine();
+			if(line == null)break;
+			builder.append(line);
+		}
+		System.out.println(builder.toString());
+	```
+
+> In order to be sure about your json structure and request, first copy it into POSTMAN `import menu > post raw text > click import button`.
+> This will give you structure for JSON, moreover will tell you about headers and content-type details.
+
+## Maven War plugin error
+### Stack Trace 
+* Showed that un-met dependency or some sort of error in `maven-war-plugin`
+
+### Solution
+* Update maven dependency to latest one.
+
+## Removing unused imports in eclipse
+* Eclipse IDE will show a yellow underline for all those imports at the top of our class and message is “The import xxx is never used“.
+* To remove those unused imports automatically, just click on the class and press the shortcut `Ctrl + Shift + O` to initilize the `Organize imports` feature. 
+
+## How to enable automatic formatting and cleanup
+
+By default automatic formatting and cleanup is disabled. To enable it, do the following:
+
+* Go to Window > Preferences > Java > Editor > Save Actions.
+* Select Perform the selected actions on save.
+* Select Format Source code. Make sure Format all lines is selected. Below I discuss when to use the other option.
+* Make sure Organize imports is selected.
+* Select Additional actions.
+* Click Ok, edit some code, save it and watch Eclipse format it automatically.
+
+## Use of ThreadPoolTaskExecutor
