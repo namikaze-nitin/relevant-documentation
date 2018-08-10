@@ -543,3 +543,6 @@ By default automatic formatting and cleanup is disabled. To enable it, do the fo
 * Click Ok, edit some code, save it and watch Eclipse format it automatically.
 
 ## Use of ThreadPoolTaskExecutor
+
+## Maven with Multiple projects
+[Reference link](https://books.sonatype.com/mvnex-book/reference/multimodule-sect-building-multimodule.html)
