@@ -58,6 +58,7 @@ Goto your class where you want SessionFactory and add :
 
 * We do [not need](https://stackoverflow.com/questions/10141235/spring-dependency-injection-autowired-without-setter) setters while autowiring.
 
+[Constructor vs setter injection](http://www.javainterviewpoint.com/difference-between-setter-and-constructor-injection/)
 [Reference Link](https://stackoverflow.com/questions/40620000/spring-autowire-on-properties-vs-constructor)
 [Reference Link on  Setter vs Constructor Injection](https://www.logicbig.com/tutorials/spring-framework/spring-core/types-of-dependency-injection.html)
 
@@ -546,3 +547,12 @@ By default automatic formatting and cleanup is disabled. To enable it, do the fo
 
 ## Maven with Multiple projects
 [Reference link](https://books.sonatype.com/mvnex-book/reference/multimodule-sect-building-multimodule.html)
+
+## Java @override annotation
+https://www.journaldev.com/817/java-override-annotation
+
+## @Component vs @Convfiguration
+http://dimafeng.com/2015/08/29/spring-configuration_vs_component/
+
+## @RequestParam vs @PathVariable
+https://javabeat.net/spring-mvc-requestparam-pathvariable/
