@@ -556,3 +556,43 @@ http://dimafeng.com/2015/08/29/spring-configuration_vs_component/
 
 ## @RequestParam vs @PathVariable
 https://javabeat.net/spring-mvc-requestparam-pathvariable/
+
+## Git Use
+### Branch on master
+#### Create a branch
+* Will create a new branch and `checkout` that created branch : `git checkout -b <branch-name>`
+
+* This branch is currently created in your local repo. In order to make this branch in remote repo, you need to create/add some files to this branch and then push it in. 
+```
+ gedit README.md
+```
+#### Commit
+* Before making any commit you need to stage those changes : `git add .`
+* Now commit these changes to your local repo : `git commit -m "put some not-so-stupid comment here explaining the changes that you did"`.
+* Now push it in.
+
+
+#### Deleting a branch
+* If only single branch is present, we need to create a new branch and from this branch then delete that branch.
+`git checkout -b <branch-name>`
+* Problem may-be that my new branch has base as "branch-to-delete" and it wont allow me to delete the current branch. Which resulted in : my head-branch being the branch that I want to delete... weird han!!!
+* Need to change my default branch(master branch from settings using UI).
+* And then `git push origin --delete <branch-name>`
+
+#### Push and pull
+* While pushing/pulling make sure you push into your branch only
+`git push/pull origin <branch-name>`.
+* Mentioning branch name is a good practice to be on safe side.
+
+#### Fetch and Checkout
+* In order to fetch all the branches from repo : `git fetch`.
+* Now, in order to use a particular branch : `git checkout <branch-name>`
+
+[Reference for common git commmands](https://gist.github.com/hofmannsven/6814451)
+
+## Maven files
+* These files are from Maven wrapper. It works similarly to the Gradle wrapper.
+
+* This allows you to run the Maven project without having Maven installed and present on the path. It downloads the correct Maven version if it's not found (as far as I know by default in your user home directory).
+
+* The `mvnw` file is for Linux (bash) and the `mvnw.cmd` is for Windows environment.
