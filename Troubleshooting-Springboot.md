@@ -1,4 +1,8 @@
 # Troubleshooting
+## Partitioning USB
+### USB not showing
+https://www.pendrivelinux.com/restoring-your-usb-key-partition/
+
 ## Create a configuration in SpringBoot
 * Lets us try to autowire a SessionFactory object. For this, we need to configure a SessionFactory bean. Go-To application.properties and add ```spring.jpa.properties.hibernate.current_session_context_class=
 org.springframework.orm.hibernate4.SpringSessionContext```.
@@ -404,6 +408,12 @@ Using EntityManagerFactory approach allows us to use callback method annotations
     			+ "hrs " + diffInMins%60 + "mins");
     }
 ```
+* Cuurent Date :
+```
+Date date = new Date();
+DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
+String formattedDate = dateFormat.format(date);
+```
 
 ## Job Scheduling in java
 * For spring-boot example: 
@@ -450,6 +460,7 @@ Using EntityManagerFactory approach allows us to use callback method annotations
 	* You can use different fields provided by `@Scheduled` annotation. For eg, to schedule job at exactly x=2 seconds use `@Scheduled(fixedRate = 2000)`.
 
 * For enabling configuration using xml file : [click here...](http://websystique.com/spring/spring-job-scheduling-using-xml-configuration/).
+* For other example list and ref, [click here](http://www.quartz-scheduler.org/documentation/quartz-2.x/examples/Example3.html).
 
 * You can modify these calls to support scheduling on different weekdays. For eg, you might not want your scheduling to work on weekends, for that you can modify your cron job as : `@Scheduled(cron="*/5 * * * * MON-FRI")`
 
@@ -596,3 +607,9 @@ https://javabeat.net/spring-mvc-requestparam-pathvariable/
 * This allows you to run the Maven project without having Maven installed and present on the path. It downloads the correct Maven version if it's not found (as far as I know by default in your user home directory).
 
 * The `mvnw` file is for Linux (bash) and the `mvnw.cmd` is for Windows environment.
+
+## Different quering methods
+https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-the-query-annotation/
+
+## @Autowire vs @PersistenceContext for EntityManager
+https://stackoverflow.com/questions/31335211/autowired-vs-persistencecontext-for-entitymanager-bean

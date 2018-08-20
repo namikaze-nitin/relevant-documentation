@@ -44,4 +44,13 @@
 
 ### Executing code in Node
 * We have `index.html` and `index.js` files and we will be running it on `Node`.
-* 
+* Node is a programm that includes a JS engine and can execute that code for us.
+
+> We have an integrated terminal in visual-studio-code, No need to use a new one.
+
+### ELEMENTS in js
+#### Variable
+* Just like in any other lang.
+```
+	let name;
+```
