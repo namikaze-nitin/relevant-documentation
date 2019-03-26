@@ -141,6 +141,7 @@ Error: The connection was refused.
 > Reference : [Vultr doc on setting up](https://www.vultr.com/docs/how-to-install-mosquitto-mqtt-broker-server-on-ubuntu-16-04)
 
 
+<!--
 
 # MQTT Code
 Tech-stack for this :
@@ -176,3 +177,4 @@ Inbound gateways are where some external system sends a request and Spring Integ
 Outbound gateways are where Spring Integration makes the request and some external system replies.
 
 
+-->
